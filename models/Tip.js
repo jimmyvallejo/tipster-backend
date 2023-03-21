@@ -6,15 +6,15 @@ const tipSchema = new Schema(
     picture: String,
     owner: String,
     text: String,
-    likes: [{type: Schema.Types.ObjectId, ref: "User"}],
-    comments: [{type: Schema.Types.ObjectId, ref: "Comment"}],
+    likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     category: String,
-    location: String
+    location: String,
   },
-{
-  timeseries: true,
+  {
+    timeseries: true,
     timestamps: true,
-}
+  }
 );
 
 const Tip = model("Tip", tipSchema);

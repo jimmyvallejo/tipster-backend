@@ -5,7 +5,7 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     password: {
       type: String,
@@ -14,17 +14,17 @@ const userSchema = new Schema(
     username: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     name: String,
     profile_image: {
       type: String,
-      default: "https://cdn-icons-png.flaticon.com/512/702/702814.png" 
+      default: "https://cdn-icons-png.flaticon.com/512/702/702814.png",
     },
     location: String,
     tips: [{ type: Schema.Types.ObjectId, ref: "Tips" }],
     followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    following: [{ type: Schema.Types.ObjectId, ref: "User" }]
+    following: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
   {
     timeseries: true,

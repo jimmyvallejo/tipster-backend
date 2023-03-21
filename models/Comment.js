@@ -7,8 +7,8 @@ const commentSchema = new Schema(
     owner: String,
     text: String,
     likes: Number,
-    comments: [{type: Schema.Types.ObjectId, ref: "Comment"}],
-    category: String
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+    category: String,
   },
   {
     timeseries: true,
