@@ -4,90 +4,17 @@ const fileUploader = require("../config/cloudinary.config");
 const User = require("../models/User");
 const Tip = require("../models/Tip");
 
-router.post(
-  "/add-picture",
-  fileUploader.single("profile_image"),
-  (req, res) => {
-    res.json(req.file.path);
-  }
-);
+const { profileDelete, profileTips, getProfile, editProfile, addPicture } = require('../controllers/users')
 
-router.post("/profile-edit/:username", async (req, res) => {
-  const username = req.params.username;
+router.post("/add-picture", fileUploader.single("profile_image"), addPicture)
+  
 
-  try {
-    const existingUser = await User.findOne({
-      $or: [{ email: req.body.email }, { username: req.body.username }],
-    });
+router.post("/profile-edit/:username", editProfile)
 
-    if (existingUser && existingUser.username !== username) {
-      return res
-        .status(400)
-        .json({ message: "Email or username already exists" });
-    }
+router.get("/profile/:username", getProfile)
 
-    const updatedUser = await User.findOneAndUpdate(
-      { username: username },
-      {
-        name: req.body.name,
-        email: req.body.email,
-        username: req.body.username,
-        profile_image: req.body.profile_image,
-      },
-      { new: true }
-    );
+router.get("/profile/tips/:username", profileTips)
 
-    const updateImage = await Tip.updateMany(
-      { owner: username },
-      { $set: { ownerpicture: req.body.profile_image } }
-    );
-
-    const updateResult = await Tip.updateMany(
-      { owner: username },
-      { $set: { owner: req.body.username } }
-    );
-
-    res.json(updatedUser);
-  } catch (err) {
-    console.log({message: err.message});
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-router.get("/profile/:username", (req, res) => {
-  const username = req.params.username;
-  User.findOne({ username })
-    .then((user) => {
-      res.json(user);
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({ message: "Internal server error" });
-    });
-});
-
-router.get("/profile/tips/:username", (req, res) => {
-  const owner = req.params.username;
-  Tip.find({ owner })
-    .sort({ createdAt: -1 })
-    .then((tip) => {
-      res.json(tip);
-    })
-    .catch((error) => {
-      console.error({message: error});
-      res.status(500).json({ message: "Internal server error" });
-    });
-});
-
-router.get("/profile/delete/:username", (req, res) => {
-  const username = req.params.username;
-  User.findOneAndDelete({ username })
-    .then((deletedUser) => {
-      res.json(deletedUser);
-    })
-    .catch((err) => {
-      console.log({ message: err.message });
-    });
-});
+router.get("/profile/delete/:username", profileDelete)
 
 module.exports = router;
